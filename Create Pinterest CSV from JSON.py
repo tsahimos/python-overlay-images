@@ -43,6 +43,26 @@ def get_file_extension_from_url(url):
     _, ext = os.path.splitext(path)
     return ext.lower() if ext else '.jpg'  # Default to .jpg if no extension found
 
+def download_image(url, destination_path):
+    """Download image from URL to destination path."""
+    try:
+        logger.info(f"Downloading image from: {url}")
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=30)
+        response.raise_for_status()
+        
+        with open(destination_path, 'wb') as f:
+            f.write(response.content)
+        
+        logger.info(f"Successfully downloaded: {destination_path}")
+        return True
+    
+    except Exception as e:
+        logger.error(f"Failed to download image from {url}: {str(e)}")
+        raise
+
 def create_csv_file(data, json_filename, csv_folder):
     """Create CSV file from processed data."""
     try:
